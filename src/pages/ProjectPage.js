@@ -1,18 +1,13 @@
-import { useDispatch } from 'react-redux';
-import { useState, useEffect } from 'react';
+import { Container, Typography, TextField, Button, List, ListItem, Paper } from '@mui/material';
+import { useSelector, useDispatch } from 'react-redux';
+import { useState } from 'react';
 import { addProject } from '../redux/projectSlice';
 import useLocalStorage from '../hooks/useLocalStorage';
 
 function ProjectPage() {
-  const dispatch = useDispatch();
   const [projects, setProjects] = useLocalStorage('projects', []);
   const [name, setName] = useState('');
-
-  useEffect(() => {
-    projects.forEach(item => dispatch(addProject(item)));
-    // Only runs once on mount
-    // eslint-disable-next-line
-  }, []);
+  const dispatch = useDispatch();
 
   const handleAddProject = () => {
     if (name.trim()) {
@@ -24,14 +19,26 @@ function ProjectPage() {
   };
 
   return (
-    <div>
-      <h1>Group Projects</h1>
-      <input value={name} onChange={e => setName(e.target.value)} placeholder="Project Name" />
-      <button onClick={handleAddProject}>Add Project</button>
-      <ul>
-        {projects.map((proj, idx) => <li key={idx}>{proj.name}</li>)}
-      </ul>
-    </div>
+    <Container>
+      <Typography variant="h4" gutterBottom>Group Projects</Typography>
+      <TextField
+        variant="outlined"
+        label="Project Name"
+        value={name}
+        onChange={e => setName(e.target.value)}
+        sx={{ marginRight: 2 }}
+      />
+      <Button variant="contained" color="primary" onClick={handleAddProject}>
+        Add Project
+      </Button>
+      <List>
+        {projects.map((proj, idx) => (
+          <ListItem key={idx}>
+            <Paper sx={{ padding: 1, width: '100%' }}>{proj.name}</Paper>
+          </ListItem>
+        ))}
+      </List>
+    </Container>
   );
 }
 
